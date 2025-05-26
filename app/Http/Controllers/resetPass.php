@@ -24,7 +24,7 @@ class resetPass extends Controller
         }
 
         try {
-            $userResponse = $client->get("$baseurl}/auth/me", [
+            $userResponse = $client->get("{$baseurl}/auth/me", [
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
                 ],
