@@ -1,13 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-    cekData()
+    cekData();
 });
 
-function cekData(){
+function cekData() {
     const data = window.apiData;
+    console.log(data);
     const token = window.apiData.token;
     const errMassage = document.getElementById("errMassage");
     const inputContainer = document.getElementById("inputContainer");
-    const linkToLoginpage = document.getElementById("linkToLoginpage")
+    const linkToLoginpage = document.getElementById("linkToLoginpage");
 
     if (data.userData.exception === null || !data || !data.userData) {
         errMassage.style.display = "block";
@@ -37,12 +38,12 @@ function submit(data, token) {
                     confirmButtonText: "Coba Lagi",
                 });
             } else {
-                resetPass(data, newPass, token);
+                resetPass(newPass, token);
             }
         });
 }
 
-function resetPass(data, newPassword, token) {
+function resetPass(newPassword, token) {
     fetch(`/resetPassword/${token}`, {
         method: "POST",
         headers: {
@@ -51,9 +52,7 @@ function resetPass(data, newPassword, token) {
                 .content,
         },
         body: JSON.stringify({
-            id_user: data.userData.id_user,
             newPassword: newPassword,
-            token: token,
         }),
     })
         .then((response) => response.json())
@@ -65,6 +64,7 @@ function resetPass(data, newPassword, token) {
                     icon: "success",
                     confirmButtonText: "lanjutkan",
                 });
+                logout();
             } else {
                 Swal.fire({
                     title: "Error!",
@@ -73,7 +73,6 @@ function resetPass(data, newPassword, token) {
                     confirmButtonText: "Coba Lagi",
                 });
             }
-            logout();
         })
         .catch((error) => {
             console.error("Error ketika menghapus me-reset passowrd:", error);
@@ -87,20 +86,21 @@ function resetPass(data, newPassword, token) {
 }
 
 function logout() {
-    fetch('/logout', {
-        method: 'POST',
-        credentials: 'include',
+    fetch("/logout", {
+        method: "POST",
+        credentials: "include",
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
-        }
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                .content,
+            Accept: "application/json",
+        },
     })
-    .then(response => {
-        if (response.ok) {
-            // window.location.href = '/admin';
-        }
-    })
-    .catch(error => {
-        console.error('Logout error:', error);
-    });
+        .then((response) => {
+            if (response.ok) {
+                // window.location.href = '/admin';
+            }
+        })
+        .catch((error) => {
+            console.error("Logout error:", error);
+        });
 }
